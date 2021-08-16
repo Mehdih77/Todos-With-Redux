@@ -32,6 +32,7 @@ export default function todosReducer(state = initState, action){
                             completed: !todo.completed
                         }
                     }
+                    return todo;
                 })
             }
             
@@ -54,4 +55,15 @@ export const todoAdded = (text) => ({
     payload: { id: 6, text, completed: false}
 })
 
+export const todoToggled = (todoId) => ({
+    type: 'todos/todoToggled',
+    payload: todoId
+})
+
+export const todoDeleted = (todoId) => ({
+    type: 'todos/todoDeleted',
+    payload: todoId
+})
+
+// for useSelector
 export const selectTodos = state => state.todosReducer.entities;
