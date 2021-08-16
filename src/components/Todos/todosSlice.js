@@ -101,3 +101,6 @@ export const todoDeleted = (todoId) => ({
 
 // for useSelector
 export const selectTodos = state => state.todosReducer.entities;
+
+
+export const selectTodosIds = state => Object.keys(state.todosReducer.entities);

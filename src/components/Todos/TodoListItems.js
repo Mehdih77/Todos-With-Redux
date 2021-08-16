@@ -1,11 +1,13 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { todoDeleted, todoToggled } from "./todosSlice";
 
 export const availableColors = ["green", "blue", "orange", "purple", "red"];
 export const captalize = (s) => s[0].toUpperCase() + s.slice(1); // to captalize first letter
 
-export default function TodoListItems({todo}) {
+export default function TodoListItems({ id }) {
 
+  // id come from TodoList.js
+  const todo = useSelector( state => state.todosReducer.entities[id])
   const { text, color, completed} = todo;
   const dispatch = useDispatch();
 
@@ -24,7 +26,6 @@ export default function TodoListItems({todo}) {
   }
 
 
-
     return (
         <li>
           <div className="view">
@@ -33,7 +34,7 @@ export default function TodoListItems({todo}) {
                 type="checkbox"
                 className='toggle'
                 checked={completed}
-                onClick={handleCompletedChange}
+                onChange={handleCompletedChange}
               />
               <div className="todo-text">{text}</div>
             </div>
