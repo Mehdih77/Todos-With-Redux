@@ -1,5 +1,6 @@
 // That comment codes is first way with array method
 // then we changed them to another way with Object
+import produce from "immer";
 
 const initState = {
     // entities: [
@@ -18,77 +19,98 @@ const initState = {
     }
 }
 
-export default function todosReducer(state = initState, action){
+const todosReducer = produce((state, action) => {
     switch (action.type) {
 
         case 'todos/todoAdded':
             const todo = action.payload;
-            // return {
-            //     ...state,
-            //     entities: [
-            //         ...state.entities,
-            //         todo
-            //     ]
-            // }
-            return {
-                ...state,
-                entities: {
-                    ...state.entities,
-                    [todo.id]: todo
-                }
-            }
+            state.entities[todo.id] = todo
+            break;
 
         case "todos/todoToggled":
             const toggledTodoId = action.payload;
-            // return {
-            //     ...state,
-            //     entities: state.entities.map(todo => {
-            //         if (todo.id === toggledTodoId) {
-            //             return {
-            //                 ...todo,
-            //                 completed: !todo.completed
-            //             }
-            //         }
-            //         return todo;
-            //     })
-            // }
-            const todoToggleddd = state.entities[toggledTodoId];
-            return {
-                ...state,
-                entities: {
-                    ...state.entities,
-                    [toggledTodoId]: {
-                        ...todoToggleddd,
-                        completed: !todoToggleddd.completed
-                    }
-                }
-            }
-            
+            state.entities[toggledTodoId].completed = !state.entities[toggledTodoId].completed
+            break;
+
         case "todos/todoDeleted":
-            const deletedTodoId = action.payload;
-            // return {
-            //     ...state,
-            //     entities: state.entities.filter(f => f.id !== deletedTodoId)
-            // }   
-            const entities = {...state.entities};
-            delete entities[deletedTodoId];
-            return {
-                ...state,
-                entities
-            } 
-    
-        default:
-            return state;
+            const deletedTodoId = action.payload; 
+            delete state.entities[deletedTodoId]
+            break;
     }
-}
+} , initState)
+
+export default todosReducer;
+
+// export default function todosReducer(state = initState, action){
+//     switch (action.type) {
+
+//         case 'todos/todoAdded':
+//             const todo = action.payload;
+//             // return {
+//             //     ...state,
+//             //     entities: [
+//             //         ...state.entities,
+//             //         todo
+//             //     ]
+//             // }
+//             return {
+//                 ...state,
+//                 entities: {
+//                     ...state.entities,
+//                     [todo.id]: todo
+//                 }
+//             }
+
+//         case "todos/todoToggled":
+//             const toggledTodoId = action.payload;
+//             // return {
+//             //     ...state,
+//             //     entities: state.entities.map(todo => {
+//             //         if (todo.id === toggledTodoId) {
+//             //             return {
+//             //                 ...todo,
+//             //                 completed: !todo.completed
+//             //             }
+//             //         }
+//             //         return todo;
+//             //     })
+//             // }
+//             const todoToggleddd = state.entities[toggledTodoId];
+//             return {
+//                 ...state,
+//                 entities: {
+//                     ...state.entities,
+//                     [toggledTodoId]: {
+//                         ...todoToggleddd,
+//                         completed: !todoToggleddd.completed
+//                     }
+//                 }
+//             }
+            
+//         case "todos/todoDeleted":
+//             const deletedTodoId = action.payload;
+//             // return {
+//             //     ...state,
+//             //     entities: state.entities.filter(f => f.id !== deletedTodoId)
+//             // }   
+//             const entities = {...state.entities};
+//             delete entities[deletedTodoId];
+//             return {
+//                 ...state,
+//                 entities
+//             } 
+    
+//         default:
+//             return state;
+//     }
+// }
 
 
-// action factory
 export const todoAdded = (text) => ({
     type: 'todos/todoAdded',
     payload: { id: 6, text, completed: false}
 })
-
+// action factory 
 export const todoToggled = (todoId) => ({
     type: 'todos/todoToggled',
     payload: todoId
@@ -101,6 +123,5 @@ export const todoDeleted = (todoId) => ({
 
 // for useSelector
 export const selectTodos = state => state.todosReducer.entities;
-
 
 export const selectTodosIds = state => Object.keys(state.todosReducer.entities);
