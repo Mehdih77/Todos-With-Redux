@@ -6,7 +6,7 @@ export const captalize = (s) => s[0].toUpperCase() + s.slice(1); // to captalize
 
 export default function TodoListItems({ id }) {
 
-  // id come from TodoList.js
+  // ! id come from TodoList.js
   const todo = useSelector( state => state.todosReducer.entities[id])
   const { text, color, completed} = todo;
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ export default function TodoListItems({ id }) {
               />
               <div className="todo-text">{text}</div>
             </div>
-            <div className="degment button">
+            <div className="segment buttons">
               <select 
                 className='colorPicker'
                 defaultValue={color}

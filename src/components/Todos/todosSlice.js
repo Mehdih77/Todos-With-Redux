@@ -110,7 +110,7 @@ export const todoAdded = (text) => ({
     type: 'todos/todoAdded',
     payload: { id: 6, text, completed: false}
 })
-// action factory 
+//* action factory 
 export const todoToggled = (todoId) => ({
     type: 'todos/todoToggled',
     payload: todoId
@@ -121,7 +121,7 @@ export const todoDeleted = (todoId) => ({
     payload: todoId
 })
 
-// for useSelector
+//* for useSelector
 export const selectTodos = state => state.todosReducer.entities;
 
 export const selectTodosIds = state => Object.keys(state.todosReducer.entities);
