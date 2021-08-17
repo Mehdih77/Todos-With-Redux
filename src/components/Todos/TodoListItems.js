@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { todoDeleted, todoToggled } from "./todosSlice";
+import { todoDeleted, todoToggled, colorChanged } from "./todosSlice";
 
 export const availableColors = ["green", "blue", "orange", "purple", "red"];
 export const captalize = (s) => s[0].toUpperCase() + s.slice(1); // to captalize first letter
@@ -25,6 +25,10 @@ export default function TodoListItems({ id }) {
     dispatch(todoDeleted(todo.id))
   }
 
+  function handleColorChanged(e) {
+    dispatch(colorChanged(todo.id, e.target.value))
+  }
+
 
     return (
         <li>
@@ -43,6 +47,7 @@ export default function TodoListItems({ id }) {
                 className='colorPicker'
                 defaultValue={color}
                 style={{color}}
+                onChange={handleColorChanged}
                 >
                   <option value=""></option>
                   {colorOptions}

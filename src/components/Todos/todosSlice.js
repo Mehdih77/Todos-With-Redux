@@ -52,6 +52,9 @@ const todosReducer = produce((state, action) => {
                 }
             })
             break;
+        case "todos/colorChanged":
+            const {color, id} = action.payload;
+            state.entities[id].color = color;
     }
 } , initState)
 
@@ -143,6 +146,14 @@ export const markAllCompleted = () => ({
 
 export const clearCompleted = () => ({
     type: "todos/clearCompleted"
+})
+
+export const colorChanged = (todoId , color) => ({
+    type: 'todos/colorChanged',
+    payload: {
+        id: todoId,
+        color
+    }
 })
 
 
