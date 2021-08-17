@@ -2,6 +2,7 @@
 // then we changed them to another way with Object
 import produce from "immer";
 import { StatusFilters } from "../Filters/filterSlice";
+import { createSelector } from "reselect";
 
 const initState = {
     // entities: [
@@ -122,34 +123,70 @@ export const todoDeleted = (todoId) => ({
     payload: todoId
 })
 
-//* for useSelector
-export const selectTodos = state => state.todosReducer.entities;
 
+
+
+//* for useSelector
 export const selectTodosIds = state => Object.keys(state.todosReducer.entities);
+
+export const selectTodoEntities = state => state.todosReducer.entities;
 
 //* fot filltering todo items
 
-const selectFilteredTodos = state => {
-    const todos = Object.values(selectTodos(state));
-    const { status , colors } = state.filterReducer;
+const selectTodos = createSelector(
+    selectTodoEntities,
+    (todoEntities) => Object.values(todoEntities)
+)
 
-    const showAll = status === StatusFilters.All;
+const selectFilteredTodos = createSelector(
+    selectTodos,
+    state => state.filterReducer,
+    ( todos, filters ) => {
+        const { status , colors } = filters;
 
-    if ( showAll && colors.length === 0) {
-        return todos
+        const showAll = status === StatusFilters.All;
+
+        if ( showAll && colors.length === 0) {
+            return todos
+        }
+
+        const showCompleted = status === StatusFilters.Completed;
+        return todos.filter( todo => {
+            const statusFilter = showAll || todo.completed === showCompleted;
+            const colorsFilter = colors.length === 0 || colors.includes(todo.color);
+
+            return statusFilter && colorsFilter;
+    })
     }
 
-    const showCompleted = status === StatusFilters.Completed;
-    return todos.filter( todo => {
-        const statusFilter = showAll || todo.completed === showCompleted;
-        const colorsFilter = colors.length === 0 || colors.includes(todo.color);
+)
 
-        return statusFilter && colorsFilter;
-    })
-}
+// const selectFilteredTodos = state => {
+//     const todos = Object.values(selectTodoEntities(state));
+//     const { status , colors } = state.filterReducer;
 
-export const selectFilteredTodoIds = state => {
-    const filteredTodos = selectFilteredTodos(state);
+//     const showAll = status === StatusFilters.All;
 
-    return filteredTodos.map( todo => todo.id )
-}
+//     if ( showAll && colors.length === 0) {
+//         return todos
+//     }
+
+//     const showCompleted = status === StatusFilters.Completed;
+//     return todos.filter( todo => {
+//         const statusFilter = showAll || todo.completed === showCompleted;
+//         const colorsFilter = colors.length === 0 || colors.includes(todo.color);
+
+//         return statusFilter && colorsFilter;
+//     })
+// }
+
+export const selectFilteredTodoIds = createSelector(
+    selectFilteredTodos,
+    filteredTodos => filteredTodos.map(todo => todo.id)
+)
+
+// export const selectFilteredTodoIds = state => {
+//     const filteredTodos = selectFilteredTodos(state);
+
+//     return filteredTodos.map( todo => todo.id )
+// }
