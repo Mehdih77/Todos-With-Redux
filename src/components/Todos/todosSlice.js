@@ -38,6 +38,20 @@ const todosReducer = produce((state, action) => {
             const deletedTodoId = action.payload; 
             delete state.entities[deletedTodoId]
             break;
+        
+        case "todos/markAllCompleted":
+            Object.values(state.entities).forEach(todo => {
+                state.entities[todo.id].completed = true
+            })
+            break;
+
+        case "todos/clearCompleted":
+            Object.values(state.entities).forEach(todo => {
+                if (todo.completed) {
+                    delete state.entities[todo.id]
+                }
+            })
+            break;
     }
 } , initState)
 
@@ -123,6 +137,14 @@ export const todoDeleted = (todoId) => ({
     payload: todoId
 })
 
+export const markAllCompleted = () => ({
+    type: 'todos/markAllCompleted'
+})
+
+export const clearCompleted = () => ({
+    type: "todos/clearCompleted"
+})
+
 
 
 
@@ -133,7 +155,7 @@ export const selectTodoEntities = state => state.todosReducer.entities;
 
 //* fot filltering todo items
 
-const selectTodos = createSelector(
+export const selectTodos = createSelector(
     selectTodoEntities,
     (todoEntities) => Object.values(todoEntities)
 )
