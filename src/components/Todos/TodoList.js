@@ -1,5 +1,5 @@
 import { useSelector, shallowEqual } from "react-redux";
-import { selectTodos, selectTodosIds } from "../Todos/todosSlice";
+import { selectFilteredTodoIds } from "../Todos/todosSlice";
 import TodoListItems from "./TodoListItems";
 
 export default function TodoList() {
@@ -7,7 +7,7 @@ export default function TodoList() {
     // const todos = useSelector(selectTodos);
     
     // use shallowEqual for block rendering all the components when small thing changed
-    const todosIds = useSelector(selectTodosIds, shallowEqual) 
+    const todosIds = useSelector(selectFilteredTodoIds, shallowEqual) 
 
     // const renderedListItems = todos.map((todo) => {
     //     return <TodoListItems key={todo.id} todo={todo} />

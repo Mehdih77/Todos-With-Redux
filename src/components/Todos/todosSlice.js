@@ -1,6 +1,7 @@
 // That comment codes is first way with array method
 // then we changed them to another way with Object
 import produce from "immer";
+import { StatusFilters } from "../Filters/filterSlice";
 
 const initState = {
     // entities: [
@@ -125,3 +126,30 @@ export const todoDeleted = (todoId) => ({
 export const selectTodos = state => state.todosReducer.entities;
 
 export const selectTodosIds = state => Object.keys(state.todosReducer.entities);
+
+//* fot filltering todo items
+
+const selectFilteredTodos = state => {
+    const todos = Object.values(selectTodos(state));
+    const { status , colors } = state.filterReducer;
+
+    const showAll = status === StatusFilters.All;
+
+    if ( showAll && colors.length === 0) {
+        return todos
+    }
+
+    const showCompleted = status === StatusFilters.Completed;
+    return todos.filter( todo => {
+        const statusFilter = showAll || todo.completed === showCompleted;
+        const colorsFilter = colors.length === 0 || colors.includes(todo.color);
+
+        return statusFilter && colorsFilter;
+    })
+}
+
+export const selectFilteredTodoIds = state => {
+    const filteredTodos = selectFilteredTodos(state);
+
+    return filteredTodos.map( todo => todo.id )
+}
