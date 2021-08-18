@@ -3,6 +3,9 @@
 import produce from "immer";
 import { StatusFilters } from "../Filters/filterSlice";
 import { createSelector } from "reselect";
+import {client} from '../../api/client';
+// import axios from "axios";
+
 
 const initState = {
     // entities: [
@@ -12,13 +15,7 @@ const initState = {
     //     { id: 4, text: "php", completed: false},
     //     { id: 5, text: "html", completed: true, color: "red"},
     // ]
-    entities: {
-        1: { id: 1, text: "react", completed: true, color: "blue"},
-        2: { id: 2, text: "redux", completed: false},
-        3: { id: 3, text: "next.js", completed: true, color: "black"},
-        4: { id: 4, text: "php", completed: false},
-        5: { id: 5, text: "html", completed: true, color: "red"},
-    }
+    entities: {}
 }
 
 const todosReducer = produce((state, action) => {
@@ -55,6 +52,14 @@ const todosReducer = produce((state, action) => {
         case "todos/colorChanged":
             const {color, id} = action.payload;
             state.entities[id].color = color;
+            break;
+        case "todos/todosLoaded":
+            const todos = action.payload;
+            const newEntities = {}
+            todos.forEach(todo => {
+                newEntities[todo.id] = todo
+            })
+            state.entities = newEntities;
     }
 } , initState)
 
@@ -125,9 +130,9 @@ export default todosReducer;
 // }
 
 
-export const todoAdded = (text) => ({
+export const todoAdded = (todo) => ({
     type: 'todos/todoAdded',
-    payload: { id: 6, text, completed: false}
+    payload: todo
 })
 //* action factory 
 export const todoToggled = (todoId) => ({
@@ -155,6 +160,31 @@ export const colorChanged = (todoId , color) => ({
         color
     }
 })
+
+const todosLoaded = (todos) => ({
+    type: "todos/todosLoaded",
+    payload: todos
+})
+
+//* thunk function
+
+export const saveNewTodo = (text) => {
+    return async function saveNewTodoThunk(dispatch) {
+        const initTodo = {
+            text,
+            completed: false
+        }
+        const todoResult = await client.post('http://localhost:5000/todos',
+         initTodo);
+        dispatch(todoAdded(todoResult));
+    }
+}
+
+export const fetchTodos = (dispatch, getState) => {
+    client.get('http://localhost:5000/todos').then( todos => {
+        dispatch(todosLoaded(todos))
+    })
+}
 
 
 

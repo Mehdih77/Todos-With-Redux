@@ -1,0 +1,37 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "text": "react",
+      "completed": true,
+      "color": "blue"
+    },
+    {
+      "id": 2,
+      "text": "redux",
+      "completed": false
+    },
+    {
+      "id": 3,
+      "text": "next.js",
+      "completed": true,
+      "color": "black"
+    },
+    {
+      "id": 4,
+      "text": "php",
+      "completed": false
+    },
+    {
+      "id": 5,
+      "text": "html",
+      "completed": true,
+      "color": "red"
+    },
+    {
+      "text": "new",
+      "completed": false,
+      "id": 6
+    }
+  ]
+}
