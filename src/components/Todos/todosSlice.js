@@ -15,6 +15,7 @@ const initState = {
     //     { id: 4, text: "php", completed: false},
     //     { id: 5, text: "html", completed: true, color: "red"},
     // ]
+    status: 'idle',
     entities: {}
 }
 
@@ -53,13 +54,20 @@ const todosReducer = produce((state, action) => {
             const {color, id} = action.payload;
             state.entities[id].color = color;
             break;
-        case "todos/todosLoaded":
+        case 'todos/todosLoadingStarted':
+            state.status = 'loading'
+            break;
+        case "todos/todosLoadingFailes":
+            state.status = "failes"    
+            break;
+        case "todos/todosLoadedSuccess":
             const todos = action.payload;
             const newEntities = {}
             todos.forEach(todo => {
                 newEntities[todo.id] = todo
             })
             state.entities = newEntities;
+            state.status = 'idle';
     }
 } , initState)
 
@@ -161,9 +169,19 @@ export const colorChanged = (todoId , color) => ({
     }
 })
 
-const todosLoaded = (todos) => ({
-    type: "todos/todosLoaded",
+// status loading type
+
+const todosLoadingStarted = () => ({
+    type: "todos/todosLoadingStarted"
+})
+
+const todosLoadedSuccess = (todos) => ({
+    type: "todos/todosLoadedSuccess",
     payload: todos
+})
+
+const todosLoadingFailes = () => ({
+    type: "todos/todosLoadingFailes"
 })
 
 //* thunk function
@@ -179,14 +197,14 @@ export const saveNewTodo = (text) => {
         dispatch(todoAdded(todoResult));
     }
 }
-
+//! handle state loading
 export const fetchTodos = (dispatch, getState) => {
+    dispatch(todosLoadingStarted())
+
     client.get('http://localhost:5000/todos').then( todos => {
-        dispatch(todosLoaded(todos))
-    })
+        dispatch(todosLoadedSuccess(todos))
+    }).catch( error => dispatch(todosLoadingFailes()) )
 }
-
-
 
 
 //* for useSelector

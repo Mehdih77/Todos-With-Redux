@@ -1,0 +1,35 @@
+
+@keyframes loader {
+  0% { transform: translate(-50%,-50%) rotate(0deg); }
+  100% { transform: translate(-50%,-50%) rotate(360deg); }
+}
+.ldio div {
+  position: absolute;
+  width: 135.04px;
+  height: 135.04px;
+  border: 16.88px solid #a617d0;
+  border-top-color: transparent;
+  border-radius: 50%;
+}
+.ldio div {
+  animation: loader 0.9615384615384615s linear infinite;
+  top: 105.5px;
+  left: 105.5px
+}
+.loadingio-spinner-rolling {
+  width: 211px;
+  height: 211px;
+  display: inline-block;
+  overflow: hidden;
+  background: none;
+  margin: 0 auto;
+}
+.ldio {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0; /* see note above */
+}
+.ldio div { box-sizing: content-box; }
