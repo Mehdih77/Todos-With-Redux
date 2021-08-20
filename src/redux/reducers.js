@@ -1,10 +1,9 @@
-import { combineReducers } from "redux";
 import todosReducer from "../components/Todos/todosSlice";
 import filterReducer from "../components/Filters/filterSlice";
 
-const rootReducers = combineReducers({
+const reducer = {
     todosReducer,
     filterReducer
-});
+};
 
-export default rootReducers;
+export default reducer;
