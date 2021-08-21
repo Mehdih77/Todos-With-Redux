@@ -1,13 +1,13 @@
 // That comment codes is first way with array method
 // then we changed them to another way with Object
-import produce from "immer";
+import { createSlice } from "@reduxjs/toolkit";
 import { StatusFilters } from "../Filters/filterSlice";
 import { createSelector } from "reselect";
 import {client} from '../../api/client';
 // import axios from "axios";
 
 
-const initState = {
+const initialState = {
     // entities: [
     //     { id: 1, text: "react", completed: true, color: "blue"},
     //     { id: 2, text: "redux", completed: false},
@@ -19,59 +19,116 @@ const initState = {
     entities: {}
 }
 
-const todosReducer = produce((state, action) => {
-    switch (action.type) {
-
-        case 'todos/todoAdded':
+const todosSlice = createSlice({
+    name: 'todos',
+    initialState,
+    reducers: {
+        todoAdded(state,action) {
             const todo = action.payload;
             state.entities[todo.id] = todo
-            break;
-
-        case "todos/todoToggled":
+        },
+        todoToggled(state,action) {
             const toggledTodoId = action.payload;
             state.entities[toggledTodoId].completed = !state.entities[toggledTodoId].completed
-            break;
-
-        case "todos/todoDeleted":
+        },
+        todoDeleted(state,action) {
             const deletedTodoId = action.payload; 
             delete state.entities[deletedTodoId]
-            break;
-        
-        case "todos/markAllCompleted":
+        },
+        markAllCompleted(state,action) {
             Object.values(state.entities).forEach(todo => {
                 state.entities[todo.id].completed = true
             })
-            break;
-
-        case "todos/clearCompleted":
+        },
+        clearCompleted(state,action) {
             Object.values(state.entities).forEach(todo => {
                 if (todo.completed) {
                     delete state.entities[todo.id]
                 }
             })
-            break;
-        case "todos/colorChanged":
-            const {color, id} = action.payload;
-            state.entities[id].color = color;
-            break;
-        case 'todos/todosLoadingStarted':
-            state.status = 'loading'
-            break;
-        case "todos/todosLoadingFailes":
-            state.status = "failes"    
-            break;
-        case "todos/todosLoadedSuccess":
-            const todos = action.payload;
-            const newEntities = {}
-            todos.forEach(todo => {
-                newEntities[todo.id] = todo
-            })
-            state.entities = newEntities;
-            state.status = 'idle';
+        },
+        colorChanged: {
+            reducer(state,action) {
+                const {color, id} = action.payload;
+                state.entities[id].color = color;
+            },
+            prepare(todoId,color) {
+                return {
+                    payload: {
+                        id: todoId,
+                        color 
+                    }
+                }
+            }
+        }
     }
-} , initState)
+})
 
-export default todosReducer;
+export const {
+    todoAdded,
+    todoToggled,
+    todoDeleted,
+    markAllCompleted,
+    clearCompleted,
+    colorChanged
+} = todosSlice.actions;
+
+export default todosSlice.reducer;
+
+
+// const todosReducer = produce((state, action) => {
+//     switch (action.type) {
+
+//         case 'todos/todoAdded':
+//             const todo = action.payload;
+//             state.entities[todo.id] = todo
+//             break;
+
+//         case "todos/todoToggled":
+//             const toggledTodoId = action.payload;
+//             state.entities[toggledTodoId].completed = !state.entities[toggledTodoId].completed
+//             break;
+
+//         case "todos/todoDeleted":
+//             const deletedTodoId = action.payload; 
+//             delete state.entities[deletedTodoId]
+//             break;
+        
+//         case "todos/markAllCompleted":
+//             Object.values(state.entities).forEach(todo => {
+//                 state.entities[todo.id].completed = true
+//             })
+//             break;
+
+//         case "todos/clearCompleted":
+//             Object.values(state.entities).forEach(todo => {
+//                 if (todo.completed) {
+//                     delete state.entities[todo.id]
+//                 }
+//             })
+//             break;
+//         case "todos/colorChanged":
+//             const {color, id} = action.payload;
+//             state.entities[id].color = color;
+//             break;
+//         case 'todos/todosLoadingStarted':
+//             state.status = 'loading'
+//             break;
+//         case "todos/todosLoadingFailes":
+//             state.status = "failes"    
+//             break;
+//         case "todos/todosLoadedSuccess":
+//             const todos = action.payload;
+//             const newEntities = {}
+//             todos.forEach(todo => {
+//                 newEntities[todo.id] = todo
+//             })
+//             state.entities = newEntities;
+//             state.status = 'idle';
+//     }
+// } , initState)
+
+// export default todosReducer;
 
 // export default function todosReducer(state = initState, action){
 //     switch (action.type) {
@@ -138,36 +195,36 @@ export default todosReducer;
 // }
 
 
-export const todoAdded = (todo) => ({
-    type: 'todos/todoAdded',
-    payload: todo
-})
-//* action factory 
-export const todoToggled = (todoId) => ({
-    type: 'todos/todoToggled',
-    payload: todoId
-})
+// export const todoAdded = (todo) => ({
+//     type: 'todos/todoAdded',
+//     payload: todo
+// })
+// //* action factory 
+// export const todoToggled = (todoId) => ({
+//     type: 'todos/todoToggled',
+//     payload: todoId
+// })
 
-export const todoDeleted = (todoId) => ({
-    type: 'todos/todoDeleted',
-    payload: todoId
-})
+// export const todoDeleted = (todoId) => ({
+//     type: 'todos/todoDeleted',
+//     payload: todoId
+// })
 
-export const markAllCompleted = () => ({
-    type: 'todos/markAllCompleted'
-})
+// export const markAllCompleted = () => ({
+//     type: 'todos/markAllCompleted'
+// })
 
-export const clearCompleted = () => ({
-    type: "todos/clearCompleted"
-})
+// export const clearCompleted = () => ({
+//     type: "todos/clearCompleted"
+// })
 
-export const colorChanged = (todoId , color) => ({
-    type: 'todos/colorChanged',
-    payload: {
-        id: todoId,
-        color
-    }
-})
+// export const colorChanged = (todoId , color) => ({
+//     type: 'todos/colorChanged',
+//     payload: {
+//         id: todoId,
+//         color
+//     }
+// })
 
 // status loading type
 

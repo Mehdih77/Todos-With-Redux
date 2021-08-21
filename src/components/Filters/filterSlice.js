@@ -12,7 +12,7 @@ const initState = {
 }
 
 const filterReducer = produce((state, action) => {
-    switch (action.type) {
+    switch(action.type) {
         case 'filters/changedStatusFilter':
             state.status = action.payload
             break;

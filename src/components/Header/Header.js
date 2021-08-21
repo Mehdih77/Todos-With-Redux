@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { saveNewTodo } from '../Todos/todosSlice';
-import Loader from '../Loader/Loader';
 
 export default function Header() {
 
