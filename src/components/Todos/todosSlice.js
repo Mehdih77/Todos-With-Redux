@@ -60,6 +60,21 @@ const todosSlice = createSlice({
                     }
                 }
             }
+        },
+        todosLoadingStarted(state,action){
+            state.status = 'loading'
+        },
+        todosLoadingFailes(state,action) {
+            state.status = "failes"    
+        },
+        todosLoadedSuccess(state,action){
+            const todos = action.payload;
+            const newEntities = {}
+            todos.forEach(todo => {
+                newEntities[todo.id] = todo
+            })
+            state.entities = newEntities;
+            state.status = 'idle';
         }
     }
 })
@@ -265,9 +280,9 @@ export const fetchTodos = (dispatch, getState) => {
 
 
 //* for useSelector
-export const selectTodosIds = state => Object.keys(state.todosReducer.entities);
+export const selectTodosIds = state => Object.keys(state.todosSlice.entities);
 
-export const selectTodoEntities = state => state.todosReducer.entities;
+export const selectTodoEntities = state => state.todosSlice.entities;
 
 //* fot filltering todo items
 

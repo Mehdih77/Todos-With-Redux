@@ -7,7 +7,7 @@ export const captalize = (s) => s[0].toUpperCase() + s.slice(1); // to captalize
 export default function TodoListItems({ id }) {
 
   // ! id come from TodoList.js
-  const todo = useSelector( state => state.todosReducer.entities[id])
+  const todo = useSelector( state => state.todosSlice.entities[id])
   const { text, color, completed} = todo;
   const dispatch = useDispatch();
 
