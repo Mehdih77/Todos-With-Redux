@@ -35,11 +35,12 @@ const filterReducer = produce((state, action) => {
 export default filterReducer;
 
 
-//! action factory
-
+//* useSelector
 export const selectStatusFilter = state => state.filterReducer.status;
 export const selectColorsFilter = state => state.filterReducer.colors;
 
+
+//! action factory
 export const changedStatusFilter = (status) => ({
     type: 'filters/changedStatusFilter',
     payload: status

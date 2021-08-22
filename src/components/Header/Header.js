@@ -15,7 +15,7 @@ export default function Header() {
         if (e.which === 13 && trimmedText) {
             setStatus('loading')
             await dispatch(saveNewTodo(trimmedText))
-
+            console.log(saveNewTodo());
             setText('');
             setStatus('idle')
         }
